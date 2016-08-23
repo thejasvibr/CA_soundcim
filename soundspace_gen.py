@@ -14,7 +14,7 @@ import CA_soundprop  # import the one function from the module
 #initialise the array and define the rows, columns and number of timesteps to run the simulation 
 rows=3
 cols=3
-timesteps=4
+timesteps=3
 
 totalcells=rows*cols
 
@@ -42,8 +42,8 @@ for k in range(totalcells):
 # ----------------creating the sound sources -----------:
     
 # here the sound source is the middle one, this is a list of sources - when there are different sources 
-source_ij=[ np.array([1,1]) ]
-source_P=[np.array(100) ]
+source_ij=[ np.array([0,0]) ]
+source_P=[np.array(10) ]
 
 for src in range(len(source_ij)):
     
@@ -58,51 +58,21 @@ ijvals=[ [i,j] for i in range(rows) for j in range(cols) ]
 
 for T in range(timesteps):
     
+    for foc_cell in range(totalcells):      
+        P_simspace[T,ijvals[foc_cell][0],ijvals[foc_cell][1] ] = all_cells[foc_cell].P
+    
+    print('\n TIMESTEP: %d \n' % T)
+    
     for foc_cell in range(totalcells):
         
-         P_simspace[T,ijvals[foc_cell][0],ijvals[foc_cell][0] ] = all_cells[foc_cell].P
+         print('\n PRE :focal cell number: %d'%foc_cell)
+         print(all_cells[foc_cell].Va)
+         print(all_cells[foc_cell].P)
          # making an np array of the Pressure values of the neighbours             
          P_Nbrs=P_nbrget(P_simspace[T,:,:],cell_nbrs[foc_cell])
          all_cells[foc_cell].V_P_update( P_Nbrs )
+         print('\n focal cell number: %d'%foc_cell)
+         print(all_cells[foc_cell].Va)
+         print(all_cells[foc_cell].P)
          
-
-
-
-
-
-
-
-
-
-
-
-
     
-
-
-
-
-
-
-
-# initiate the source of the sound :
-
-soundsource=4
-v_source=np.array([0.3,0.3,0.3,0.3])
-
-cell_list=[SOUNDCELL() for i in range(rows*cols)] # initiating a whole bunch of empty soundcells
-
-
-
-
-
-
-for i in range(totalcells):
-    cell_list[i].P=0
-    cell_list[i].Va=np.array([0,0,0,0])
-
-
-cell_list[soundsource].Va=v_source # attributing the source to the central cell
-cell_list[soundsource].P=3
-
-
